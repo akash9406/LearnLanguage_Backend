@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    res.status(401).json({ error: "Session expired" });
+    res.status(401).json({ error: error });
   }
 };
 
