@@ -13,6 +13,11 @@ app.use(
     origin: [process.env.FRONTEND_URI],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Content-Type',
+    'Authorization'
+  ]
   })
 );
 app.use(express.json());
