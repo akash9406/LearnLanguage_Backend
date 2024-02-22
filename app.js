@@ -13,13 +13,12 @@ app.use(
     origin: [process.env.FRONTEND_URI],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: [
-    'Access-Control-Allow-Origin',
-    'Content-Type',
-    'Authorization'
-  ]
   })
 );
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/user/", UserRouter.router);
