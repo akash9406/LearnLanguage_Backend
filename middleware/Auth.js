@@ -1,21 +1,31 @@
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const model = require("../model/User");
-const cookie = require("cookie-parser");
 const User = model.User;
 
 const auth = async (req, res, next) => {
   try {
-    const cookie = req.cookies;
-    var decoded = jwt.verify(cookie.token, process.env.JWT_SECRET);
+    // Make sure to use the cookieParser middleware before this middleware in your app
+    // This middleware will populate the `req.cookies` object
+    const token = req.cookies.token;
+    console.log(token);
+    if (!token) {
+      return res.status(401).json({ error: "Token not provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     if (decoded.id) {
-      //req.user here is a key which we have create in  req object which will be pass down to next()
       req.user = await User.findById(decoded.id)
         .select("-token")
         .select("-password");
       next();
     }
   } catch (error) {
-    res.status(401).json({ error: error });
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "Token has expired" });
+    }
+    res.status(401).json({ error: "Invalid token" });
   }
 };
 

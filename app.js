@@ -8,6 +8,7 @@ const connect = require("./data/database");
 const cookieParser = require("cookie-parser");
 const app = express();
 connect();
+
 app.use(
   cors({
     origin: [process.env.FRONTEND_URI],
@@ -19,6 +20,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/user/", UserRouter.router);
 app.use("/api/data/", WordRouter.router);
+app.get("/", (req, res) => {
+  res.send("working");
+});
 app.use(morgan("combined"));
 app.listen(process.env.PORT, () => {
   console.log("server is working");
