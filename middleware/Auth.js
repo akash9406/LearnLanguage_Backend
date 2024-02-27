@@ -7,10 +7,12 @@ const auth = async (req, res, next) => {
   try {
     // Make sure to use the cookieParser middleware before this middleware in your app
     // This middleware will populate the `req.cookies` object
-    const token = req.cookies.token;
-    console.log(req);
-    console.log("Token:", token);
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    console.log(token);
+    console.log(authHeader);
     if (!token) {
+      // If there's no token, you may handle this according to your application logic
       return res.status(401).json({ error: "Token not provided" });
     }
 
